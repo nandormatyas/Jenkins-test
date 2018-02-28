@@ -1,0 +1,34 @@
+version: '2'
+ 
+services:
+  mysql:
+    image: mysql
+    container_name: mysql-login
+    environment:
+      MYSQL_ROOT_PASSWORD: "12345"
+      MYSQL_DATABASE: "users"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    networks:
+      - login_mysql_net
+ 
+  login:
+    depends_on:
+      - mysql
+    build: . 
+    container_name: loginmysql
+    ports:
+      - 8080:80
+    links:
+      - mysql:mysql
+    restart: always
+    networks:
+      - login_mysql_net
+ 
+volumes:
+  mysql_data:
+ 
+networks:
+  login_mysql_net:
+    driver: bridge
